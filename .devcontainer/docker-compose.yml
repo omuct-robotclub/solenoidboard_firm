@@ -1,0 +1,12 @@
+version: '3'
+services:
+  solenoidboard_firm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Working
+      - ..:/workspaces/solenoidboard_firm:cached
+    working_dir: /workspaces/solenoidboard_firm
+    tty: true
+    command: sleep inf
