@@ -20,6 +20,13 @@ jobs:
           default_bump: false
           dry_run: true  # tagはRelease作成時つける
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Artifacts
         uses: devcontainers/ci@v0.3
         with:
