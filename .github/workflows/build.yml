@@ -1,0 +1,37 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Bump Version  # バージョンをあげる
+        id: bump-version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
+          dry_run: true  # tagはRelease作成時つける
+
+      - name: Build Artifacts
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/omuct-robotclub/solenoidboard_firm-devcontainer
+          cacheFrom: ghcr.io/omuct-robotclub/solenoidboard_firm-devcontainer
+          refFilterForPush: 'refs/heads/main'  # mainブランチのみ push
+          runCmd: scripts/build.bash
+
+      - name: Create Release  # Releaseを作成
+        if: ${{ steps.bump-version.outputs.release_type != false }}
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.bump-version.outputs.new_tag }}
+          body: ${{ steps.bump-version.outputs.changelog }}
+          artifacts: build/*
