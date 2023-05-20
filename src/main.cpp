@@ -2,7 +2,7 @@
 
 #include <array>
 
-constexpr unsigned int can_id = 5;
+constexpr unsigned int can_id = 29;
 
 // IO
 BufferedSerial pc{USBTX, USBRX, 115200};
@@ -19,6 +19,8 @@ int main() {
     if(can.read(msg)) {
       if(msg.id == can_id) sol_status = msg.data[0];
       printf("%d\t%d\n", sol_status, msg.id);
+    } else {
+      printf("no msg\n");
     }
     for(int i = 0; i < 8; ++i) {
       sol[i] = (sol_status >> i) & 1;
