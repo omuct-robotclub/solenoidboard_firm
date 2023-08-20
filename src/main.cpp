@@ -20,7 +20,7 @@ int main() {
       if(msg.id == can_id) sol_status = msg.data[0];
       printf("%d\t%d\n", sol_status, msg.id);
     } else {
-      printf("no msg\n");
+      printf("I'm %x. no msg\n", can_id);
     }
     for(int i = 0; i < 8; ++i) {
       sol[i] = (sol_status >> i) & 1;
